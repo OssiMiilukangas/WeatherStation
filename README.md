@@ -1,1 +1,1 @@
-Weather station project by Ossi Miilukangas, Teemo Rovanperä, Lasse Kangas
+Weather station project by Ossi Miilukangas, Teemu Rovanperä, Lasse Kangas
