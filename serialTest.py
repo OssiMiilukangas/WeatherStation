@@ -13,14 +13,14 @@ count = 0
 while True:
     if count == sample:
         valueAvg = valueSum / sample
-        print("%.6f"%valueAvg)
+        #print("%.6f"%valueAvg)
         count = 0
         valueSum = 0.0
     
     ser = str(serialPort.readline())
-    realValue = ser.replace("b", "").replace("'", "").replace(r"\r\n", "")
-    valueSum += float(realValue)
+    realValue = ser.replace("b", "").replace("'", "").replace(r"\r\n", "").replace("0.0.", "")
+    #valueSum += float(realValue)
     
-    #print(realValue)
-    time.sleep(.1)
+    print(realValue)
+    #time.sleep(.1)
     count += 1
