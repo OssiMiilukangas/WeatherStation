@@ -18,7 +18,7 @@ while True:
         valueSum = 0.0
     
     ser = str(serialPort.readline())
-    realValue = ser.replace("b", "").replace("'", "").replace(r"\r\n", "").replace("0.0.", "")
+    realValue = ser.replace("b", "").replace("'", "").replace(r"\r\n", "").replace("0.0.", "0.")
     #valueSum += float(realValue)
     
     print(realValue)

@@ -20,6 +20,13 @@ valueSum = 0.0
 count = 0
 
 while True:
+    ser = str(serialPort.readline())
+    realValue = ser.replace("b", "").replace("'", "").replace(r"\r\n", "").replace("0.0.", "0.")
+    valueSum += float(realValue)
+    
+    #time.sleep(.1)
+    count += 1
+    
     if count == sample:
         cur.execute("SELECT MAX(idweather) FROM weather")
         currentID = str(cur.fetchall())
@@ -44,13 +51,6 @@ while True:
             
         count = 0
         valueSum = 0.0
-    
-    ser = str(serialPort.readline())
-    realValue = ser.replace("b", "").replace("'", "").replace(r"\r\n", "")
-    valueSum += float(realValue)
-    
-    #time.sleep(.1)
-    count += 1
 
 serialPort.close()
 db.close()
