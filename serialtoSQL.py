@@ -23,7 +23,6 @@ while True:
     ser = str(serialPort.readline())
     realValue = ser.replace("b", "").replace("'", "").replace(r"\r\n", "").replace("0.0.", "0.")
     valueSum += float(realValue)
-    
     #time.sleep(.1)
     count += 1
     

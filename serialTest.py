@@ -24,3 +24,5 @@ while True:
     print(realValue)
     #time.sleep(.1)
     count += 1
+
+serial.close()
