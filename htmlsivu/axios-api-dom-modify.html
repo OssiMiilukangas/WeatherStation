@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+    <script>
+
+    function start()
+    {
+
+      window.setInterval(function(){
+        const d = new Date();
+        let target = document.querySelector("#timeTarget");
+        target.innerHTML = d.getSeconds();
+      }, 1000);
+    }
+
+    function getWeather()
+    {
+      axios.get('https://jsonplaceholder.typicode.com/posts')
+      .then(function (response) {
+        // handle success
+        console.log(response);
+
+        let target = document.querySelector("#clickTarget");
+
+        response.data.forEach(element => {
+          let div = document.createElement('div');
+          let textChild = document.createTextNode(element.title);
+          div.appendChild(textChild);
+          target.appendChild(div);
+        });
+
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+    }
+
+    </script>
+  </head>
+  <body onload="start()">
+    Time is
+    <div id="timeTarget"></div>
+    <div>
+      <p>
+          Click on the button to get data from api at https://jsonplaceholder.typicode.com/posts
+      </p>
+      <button onclick="getWeather()">Get the data</button>
+      <div id="clickTarget"></div>
+    </div>
+  </body>
+</html>
