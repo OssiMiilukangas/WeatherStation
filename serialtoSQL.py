@@ -3,8 +3,8 @@ import serial
 import time
 import datetime
 
-db = MySQLdb.connect(host="mysli.oamk.fi", user="t8mios00",
-                     passwd="FPeRsNjALZXT22Xa", db="opisk_t8mios00")
+db = MySQLdb.connect(host="mweatherstation.cpd96oxpry4s.us-east-1.rds.amazonaws.com", user="t8mios00",
+                     passwd="kahvia1234", db="WeatherStation")
 
 cur = db.cursor()
 
