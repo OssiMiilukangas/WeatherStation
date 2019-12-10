@@ -24,9 +24,14 @@ humidity = ""
 
 while True:
     ser = str(serialPort.readline())
-    if(len(ser) == 21):
-        temperature = ser[14] + ser[15]
-        humidity = ser[8] + ser[9]
+    if(len(ser) > 10 and len(ser) < 30): #15, 22 / 10, 30
+        try:
+            alku, humiTemp, humidity, temperature ,loppu = ser.split()
+        except:
+            humidity = 0;
+            temperature = 0;
+            count -= 1
+            
         tempSum += float(temperature)
         humiSum += float(humidity)
         #time.sleep(.1)
