@@ -19,7 +19,7 @@ cur = db.cursor()
 
 port = "/dev/ttyACM0"
 baud = 9600
-sample = 5 #How many lines to read from serial before saving to db
+sample = 60 #How many lines to read from serial before saving to db
             #Serial gives 1 line per second
 
 serialPort = serial.Serial(port, baud, timeout = 1)
