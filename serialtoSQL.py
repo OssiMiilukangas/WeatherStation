@@ -5,7 +5,7 @@ import datetime
 
 port = "/dev/ttyACM0"
 baud = 9600
-sample = 5 #How many lines to read from serial before saving to db
+sample = 59 #How many lines to read from serial before saving to db
             #Serial gives 1 line per second
 
 tempSum = 0.0
