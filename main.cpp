@@ -19,10 +19,10 @@ int main() {
         myled = 1;
         sensor.readData();
         //if (err == 0) {
-            pc.printf("%4.2f ",sensor.ReadTemperature(CELCIUS));
+            pc.printf("- %4.2f ",sensor.ReadTemperature(CELCIUS));
             //printf("Temperature is %4.2f F \r\n",sensor.ReadTemperature(FARENHEIT));
             //printf("Temperature is %4.2f K \r\n",sensor.ReadTemperature(KELVIN));
-            pc.printf("%4.2f ",sensor.ReadHumidity());
+            pc.printf("%4.2f ",sensor.ReadHumidity() + 5);
             //printf("Dew point is %4.2f  \r\n",sensor.CalcdewPoint(sensor.ReadTemperature(CELCIUS), sensor.ReadHumidity()));
             //printf("Dew point (fast) is %4.2f  \r\n",sensor.CalcdewPointFast(sensor.ReadTemperature(CELCIUS), sensor.ReadHumidity()));
         //} else
@@ -37,7 +37,7 @@ int main() {
             + (4.23115934 * pow(10, -1) * pow(sensorValue, 1))
             - (6.04378793 * pow(10, 1));
 
-          pc.printf("%2.f\r\n", y);
+          pc.printf("%2.f -\r\n", y);
 
         myled = 0;
         wait(1);
