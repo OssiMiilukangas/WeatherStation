@@ -3,6 +3,16 @@ import serial
 import time
 import datetime
 
+port = "/dev/ttyACM0"
+baud = 9600
+sample = 5 #How many lines to read from serial before saving to db
+            #Serial gives 1 line per second
+
+tempSum = 0.0
+humiSum = 0.0
+count = 0
+temperature = ""
+humidity = ""
 i = 1
 
 while i == 1:
@@ -17,18 +27,7 @@ while i == 1:
 
 cur = db.cursor()
 
-port = "/dev/ttyACM0"
-baud = 9600
-sample = 60 #How many lines to read from serial before saving to db
-            #Serial gives 1 line per second
-
 serialPort = serial.Serial(port, baud, timeout = 1)
-
-tempSum = 0.0
-humiSum = 0.0
-count = 0
-temperature = ""
-humidity = ""
 
 while True:
     ser = str(serialPort.readline())
@@ -36,6 +35,7 @@ while True:
     if(len(ser) > 10 and len(ser) < 30): #15, 22 / 10, 30
         try:
             alku, humiTemp, humidity, temperature ,loppu = ser.split()
+            
         except:
             humidity = 0;
             temperature = 0;
