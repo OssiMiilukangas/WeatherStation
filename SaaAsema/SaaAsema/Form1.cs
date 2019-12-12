@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Timers;
 
 namespace SaaAsema
 {
@@ -22,39 +24,81 @@ namespace SaaAsema
         {
            
             InitializeComponent();
-                    
+            Timeri();
+            
         }
-      
+
+        private void Timeri()
+        {            
+            timer1.Interval = 20000;
+            timer1.Enabled = true;
+            timer1.Start();
+            timer1.Tick += new EventHandler(update_Data);             
+        }
+
+
+        private void update_Data(object sender, EventArgs e)
+        {           
+            TmpAndHmd paivita = new TmpAndHmd();
+            paivita.SetTmpAndHmd("SELECT lampotila, ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");
+            if (paivita.GetVar() == 0)
+            {
+                lampotila.Text = paivita.GetTmp() + "°C";
+                ilmankosteus.Text = paivita.GetHmd() + "%";
+                paivita.SetTmpAndHmd("SELECT AVG (lampotila) AS lampotila, AVG (ilmankosteus) AS ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");
+                lampotilaAvg.Text = paivita.GetTmp() + "°C";
+                ilmankosteusAvg.Text = paivita.GetHmd() + "%";
+            }
+
+            else
+            {
+                MessageBox.Show("NoData");
+            }
+            timer1.Stop();
+            timer1.Start();
+        }
+
         private void Button1_Click_1(object sender, EventArgs e)
         {
-            TmpAndHmd paivita = new TmpAndHmd();          
-            paivita.SetTmpAndHmd("SELECT lampotila, ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");                 
-            lampotila.Text = paivita.GetTmp() + "°C";
-            ilmankosteus.Text = paivita.GetHmd() + "%";
-            paivita.SetTmpAndHmd("SELECT AVG (lampotila) AS lampotila, AVG (ilmankosteus) AS ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");
-            lampotilaAvg.Text = paivita.GetTmp() + "°C";
-            ilmankosteusAvg.Text = paivita.GetHmd() + "%";
+            TmpAndHmd paivita = new TmpAndHmd();
+            paivita.SetTmpAndHmd("SELECT lampotila, ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");
+            if (paivita.GetVar() == 0)
+            {
+                lampotila.Text = paivita.GetTmp() + "°C";
+                ilmankosteus.Text = paivita.GetHmd() + "%";
+                paivita.SetTmpAndHmd("SELECT AVG (lampotila) AS lampotila, AVG (ilmankosteus) AS ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");
+                lampotilaAvg.Text = paivita.GetTmp() + "°C";
+                ilmankosteusAvg.Text = paivita.GetHmd() + "%";
+            }
+
+            else
+            {
+                MessageBox.Show("NoData");
+            }
         }
     
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        private void dateTimePicker1_DateChanged(object sender, EventArgs e)
         { 
            
             string a = dateTimePicker1.Value.ToString("yyyy-MM-dd");
             TmpAndHmd paivita = new TmpAndHmd();                      
-            //paivita.SetTmpAndHmd($"SELECT lampotila, ilmankosteus FROM weather WHERE paivamaara LIKE '{a}%' ");
-            this.SetTmpAndHmd2($"SELECT paivamaara, aika, lampotila, ilmankosteus FROM weather  WHERE paivamaara LIKE '{a}%' ");
-
-
+            SetTmpAndHmd2($"SELECT paivamaara, aika, lampotila, ilmankosteus FROM weather  WHERE paivamaara LIKE '{a}%' ");
             paivita.SetTmpAndHmd($"SELECT AVG (lampotila) AS lampotila, AVG (ilmankosteus) AS ilmankosteus FROM weather WHERE paivamaara LIKE '{a}%' ");
             lampotilaAvgFromDate.Text = paivita.GetTmp() + "°C";
             ilmankosteusAvgFromDate.Text = paivita.GetHmd() + "%";
-                                                  
+            foreach (var series in lampotilaChart.Series)
+            {
+                series.Points.Clear();
+            }
+            SetTmpAndHmdGraph($"SELECT * FROM weather  WHERE paivamaara LIKE '{a}%' ");
+
+
         }
         public void SetTmpAndHmd2(string sql)
         {
-            string cnnStr = @"Server = mysli.oamk.fi; Database = opisk_t8mios00;
-                          User= t8mios00; Password = FPeRsNjALZXT22Xa";
-           
+            string cnnStr = @"Server = weatherstation.cpd96oxpry4s.us-east-1.rds.amazonaws.com; Database = WeatherStation;
+                          User= t8mios00; Password = kahvia1234";
+
             MySqlConnection cnn = new MySqlConnection(cnnStr);
 
             try
@@ -69,16 +113,16 @@ namespace SaaAsema
             }            
             catch (Exception)
             {
-               //MessageBox.Show("No data.");
+               MessageBox.Show("No data.");
                 
             }           
             cnn.Close();
         }
-/*
-        public void SetTmpAndHmdGraph()
+
+        public void SetTmpAndHmdGraph(string sql)
         {
-            string cnnStr = @"Server = mysli.oamk.fi; Database = opisk_t8mios00;
-                          User= t8mios00; Password = FPeRsNjALZXT22Xa";
+            string cnnStr = @"Server = weatherstation.cpd96oxpry4s.us-east-1.rds.amazonaws.com; Database = WeatherStation;
+                          User= t8mios00; Password = kahvia1234";
 
             MySqlConnection cnn = new MySqlConnection(cnnStr);
 
@@ -90,17 +134,24 @@ namespace SaaAsema
 
                 MySqlCommand selectData;
                 selectData = cnn.CreateCommand();
-                string query = "Select * FROM weather WHERE  paivamaara LIKE '2019-12-03%' ";
-                selectData.CommandText = query;
+                selectData.CommandText = sql;
 
                 MySqlDataReader rdr = selectData.ExecuteReader();
 
+                lampotilaChart.ChartAreas[0].AxisY.Minimum = -50;              
+                lampotilaChart.ChartAreas[0].AxisY.Maximum = 50;
+                lampotilaChart.ChartAreas[0].AxisX.LabelStyle.Format = "HH:mm";
+                lampotilaChart.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
+                lampotilaChart.ChartAreas[0].CursorX.AutoScroll = true;
+                lampotilaChart.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
+
+
                 while (rdr.Read())
                 {
-                    lampotilaChart.Series["lampotila"].Points.AddXY(rdr["aika"].ToString(), rdr.GetDouble("lampotila").ToString("00,00"));            
-                    lampotilaChart.Series["ilmankosteus"].Points.AddXY(rdr["aika"].ToString(), rdr.GetDouble("ilmankosteus").ToString("00,00"));                    
+                    lampotilaChart.Series["Lampotila"].Points.AddXY(rdr["aika"].ToString(), rdr.GetDouble("lampotila").ToString("00,00"));
+                    lampotilaChart.Series["Ilmankosteus"].Points.AddXY(rdr["aika"].ToString(), rdr.GetDouble("ilmankosteus").ToString("00,00"));                                          
                 }
-                rdr.Close();
+                rdr.Close();                
 
             }
             catch (Exception)
@@ -109,16 +160,11 @@ namespace SaaAsema
             }
             cnn.Close();
         }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            this.SetTmpAndHmdGraph();           
-        }
-        */
+        
         private void Form1_Load(object sender, EventArgs e)
         {
+            
             TmpAndHmd paivita = new TmpAndHmd();
-
-
             paivita.SetTmpAndHmd("SELECT lampotila, ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE() ORDER BY idweather");// DESC LIMIT 1");
             if (paivita.GetVar() == 0)
             {
@@ -127,20 +173,18 @@ namespace SaaAsema
                 paivita.SetTmpAndHmd("SELECT AVG (lampotila) AS lampotila, AVG (ilmankosteus) AS ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");
                 lampotilaAvg.Text = paivita.GetTmp() + "°C";
                 ilmankosteusAvg.Text = paivita.GetHmd() + "%";
+                paivita.SetTmpAndHmd($"SELECT AVG (lampotila) AS lampotila, AVG (ilmankosteus) AS ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");
+                lampotilaAvgFromDate.Text = paivita.GetTmp() + "°C";
+                ilmankosteusAvgFromDate.Text = paivita.GetHmd() + "%";
+                SetTmpAndHmd2($"SELECT paivamaara, aika, lampotila, ilmankosteus FROM weather  WHERE DATE(paivamaara) = CURDATE()");
+                SetTmpAndHmdGraph($"SELECT * FROM weather  WHERE  DATE(paivamaara) = CURDATE()");
             }
             else
             {
                 MessageBox.Show("No Data.");
-            }
-
-            paivita.SetTmpAndHmd($"SELECT AVG (lampotila) AS lampotila, AVG (ilmankosteus) AS ilmankosteus FROM weather WHERE DATE(paivamaara) = CURDATE()");
-            lampotilaAvgFromDate.Text = paivita.GetTmp() + "°C";
-            ilmankosteusAvgFromDate.Text = paivita.GetHmd() + "%";
-            this.SetTmpAndHmd2($"SELECT paivamaara, aika, lampotila, ilmankosteus FROM weather  WHERE DATE(paivamaara) = CURDATE()");
-        }
-
-    }
-    
+            }           
+        }        
+    }   
 }
     
 
@@ -151,9 +195,9 @@ public class TmpAndHmd
     private int var;
 
     public TmpAndHmd()
-        {
+    {
        
-        }
+    }
 
     public string GetTmp()
     {
@@ -172,8 +216,8 @@ public class TmpAndHmd
     public string StrValue1 { get => strValue1; set => strValue1 = value; }
     public void SetTmpAndHmd(string sql)
     {
-        string cnnStr = @"Server = mysli.oamk.fi; Database = opisk_t8mios00;
-                        User= t8mios00; Password = FPeRsNjALZXT22Xa";
+        string cnnStr = @"Server = weatherstation.cpd96oxpry4s.us-east-1.rds.amazonaws.com; Database = WeatherStation;
+                          User= t8mios00; Password = kahvia1234";
 
         MySqlConnection cnn = new MySqlConnection(cnnStr);
 
@@ -211,7 +255,7 @@ public class TmpAndHmd
 
         catch (Exception)
         {
-            MessageBox.Show("No data.");
+           // MessageBox.Show("No data.");
         }
         cnn.Close();
 

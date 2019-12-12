@@ -30,6 +30,12 @@ namespace SaaAsema
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.lampotila = new System.Windows.Forms.Label();
             this.ilmankosteus = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -47,9 +53,12 @@ namespace SaaAsema
             this.lampotilaAvgFromDate = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.weatherDataGridView = new System.Windows.Forms.DataGridView();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.lampotilaChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.weatherDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lampotilaChart)).BeginInit();
             this.SuspendLayout();
             // 
             // lampotila
@@ -75,7 +84,7 @@ namespace SaaAsema
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(15, 231);
+            this.button1.Location = new System.Drawing.Point(12, 161);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 4;
@@ -94,7 +103,7 @@ namespace SaaAsema
             this.groupBox1.Controls.Add(this.ilmankosteus);
             this.groupBox1.Controls.Add(this.lampotila);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(15, 75);
+            this.groupBox1.Location = new System.Drawing.Point(15, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(269, 143);
             this.groupBox1.TabIndex = 5;
@@ -163,7 +172,7 @@ namespace SaaAsema
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.ilmankosteusAvgFromDate);
             this.groupBox2.Controls.Add(this.lampotilaAvgFromDate);
-            this.groupBox2.Location = new System.Drawing.Point(290, 75);
+            this.groupBox2.Location = new System.Drawing.Point(290, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(279, 96);
             this.groupBox2.TabIndex = 6;
@@ -212,11 +221,11 @@ namespace SaaAsema
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(290, 198);
+            this.dateTimePicker1.Location = new System.Drawing.Point(290, 135);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(279, 20);
             this.dateTimePicker1.TabIndex = 13;
-            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_DateChanged);
             // 
             // weatherDataGridView
             // 
@@ -224,31 +233,82 @@ namespace SaaAsema
             this.weatherDataGridView.AllowUserToDeleteRows = false;
             this.weatherDataGridView.AllowUserToResizeColumns = false;
             this.weatherDataGridView.AllowUserToResizeRows = false;
+            this.weatherDataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.weatherDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.weatherDataGridView.Location = new System.Drawing.Point(61, 297);
+            this.weatherDataGridView.Location = new System.Drawing.Point(59, 204);
             this.weatherDataGridView.Name = "weatherDataGridView";
             this.weatherDataGridView.ReadOnly = true;
-            this.weatherDataGridView.Size = new System.Drawing.Size(446, 300);
+            this.weatherDataGridView.Size = new System.Drawing.Size(461, 300);
             this.weatherDataGridView.TabIndex = 19;
+            // 
+            // lampotilaChart
+            // 
+            chartArea1.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea1.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Hours;
+            chartArea1.AxisX.LabelStyle.Format = "HH:mm";
+            chartArea1.AxisX.LabelStyle.Interval = 0D;
+            chartArea1.AxisX.MajorGrid.Enabled = false;
+            chartArea1.AxisX2.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea1.AxisX2.MajorGrid.Enabled = false;
+            chartArea1.AxisY.Interval = 5D;
+            chartArea1.AxisY.MajorGrid.Enabled = false;
+            chartArea1.AxisY.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Horizontal;
+            chartArea1.AxisY.Title = " °C";
+            chartArea1.AxisY2.Interval = 5D;
+            chartArea1.AxisY2.MajorGrid.Enabled = false;
+            chartArea1.AxisY2.Title = "%";
+            chartArea1.Name = "ChartArea1";
+            this.lampotilaChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.lampotilaChart.Legends.Add(legend1);
+            this.lampotilaChart.Location = new System.Drawing.Point(587, 12);
+            this.lampotilaChart.Name = "lampotilaChart";
+            this.lampotilaChart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
+            series1.BorderWidth = 3;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Color = System.Drawing.Color.Red;
+            series1.LabelFormat = "HH:mm";
+            series1.Legend = "Legend1";
+            series1.Name = "Lampotila";
+            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Time;
+            series1.YValuesPerPoint = 4;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Color = System.Drawing.Color.DodgerBlue;
+            series2.Legend = "Legend1";
+            series2.Name = "Ilmankosteus";
+            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Time;
+            series2.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
+            this.lampotilaChart.Series.Add(series1);
+            this.lampotilaChart.Series.Add(series2);
+            this.lampotilaChart.Size = new System.Drawing.Size(625, 492);
+            this.lampotilaChart.TabIndex = 20;
+            this.lampotilaChart.Text = "chart1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(590, 666);
+            this.ClientSize = new System.Drawing.Size(1224, 534);
+            this.Controls.Add(this.lampotilaChart);
             this.Controls.Add(this.weatherDataGridView);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Weather";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.weatherDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lampotilaChart)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -276,6 +336,8 @@ namespace SaaAsema
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DataGridView weatherDataGridView;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart lampotilaChart;
     }
 }
 
