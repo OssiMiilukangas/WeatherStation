@@ -1,0 +1,15 @@
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\bin\Debug\SaaAsema.exe.config
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\bin\Debug\SaaAsema.exe
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\bin\Debug\SaaAsema.pdb
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\obj\Debug\SaaAsema.csprojAssemblyReference.cache
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\obj\Debug\SaaAsema.Form1.resources
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\obj\Debug\SaaAsema.Properties.Resources.resources
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\obj\Debug\SaaAsema.csproj.GenerateResource.cache
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\obj\Debug\SaaAsema.exe
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\obj\Debug\SaaAsema.pdb
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\bin\Debug\MySql.Data.dll
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\bin\Debug\Google.Protobuf.dll
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\bin\Debug\Renci.SshNet.dll
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\bin\Debug\MySql.Data.xml
+C:\Users\Teemu\source\repos\SaaAsema\SaaAsema\obj\Debug\SaaAsema.csproj.CopyComplete
