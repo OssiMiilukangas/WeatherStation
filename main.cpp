@@ -22,7 +22,7 @@ int main() {
             pc.printf("- %4.2f ",sensor.ReadTemperature(CELCIUS));
             //printf("Temperature is %4.2f F \r\n",sensor.ReadTemperature(FARENHEIT));
             //printf("Temperature is %4.2f K \r\n",sensor.ReadTemperature(KELVIN));
-            pc.printf("%4.2f ",sensor.ReadHumidity() + 5);
+            pc.printf("%4.2f ",sensor.ReadHumidity() + 15);
             //printf("Dew point is %4.2f  \r\n",sensor.CalcdewPoint(sensor.ReadTemperature(CELCIUS), sensor.ReadHumidity()));
             //printf("Dew point (fast) is %4.2f  \r\n",sensor.CalcdewPointFast(sensor.ReadTemperature(CELCIUS), sensor.ReadHumidity()));
         //} else
